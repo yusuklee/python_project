@@ -1,44 +1,66 @@
 import os
 import shutil
-from datetime import datetime, timedelta
-from pathlib import Path
+import time
+import glob
+import sqlite3
 
-ROOT_DIR = Path("C:/Users/USER/Downloads")
-DEST_FOLDER = Path("C:/Users/USER/Desktop/old_files")
-DAYS_THRESHOLD = 7
-NOW = datetime.now()
+DAY_OLD = 15
+DOWNLOADS_PATH= os.path.join(os.path.expanduser('~'), "Downloads")
 
-def get_destination(file: Path):
-    name = file.name.lower()
-    ext = file.suffix.lower()
+CHROME_USER_DATA = os.path.join(
+    os.environ['LOCALAPPDATA'], "Google", "Chrome", "User Data", 'Profile 1'
+)
 
-    
-    if ext == ".pdf":
-        return DEST_FOLDER / "Documents"
-    return None
 
-def organize_files():
-    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 파일 정리 시작")
-    for dirpath, _, filenames in os.walk(ROOT_DIR):
-        for fname in filenames:
+def is_old(filepath):
+    file_time = os.path.getmtime(filepath)
+    return(time.time() - file_time)>(DAY_OLD * 86400)
+
+def delete_old_files(path):
+    print(f"📂 정리 중: {path}")
+    deleted=0
+
+    for root,dirs,files in os.walk(path):
+        for f in files:
             try:
-                file_path = Path(dirpath) / fname
-                if not file_path.exists() or not file_path.is_file():
-                    continue
-                last_modified= datetime.fromtimestamp(file_path.stat().st_mtime)
-                if NOW - last_modified > timedelta(days=DAYS_THRESHOLD):
-                    dest = get_destination(file_path)
-                    if dest:
-                        dest.mkdir(parents=True, exist_ok=True)
-                        shutil.move(str(file_path), str(dest/file_path.name))
-                        print(f"Moved: {file_path} -> {dest}")
-
-            except PermissionError:
-                continue
-
+                file_path = os.path.join(root,f)
+                if is_old(file_path):
+                    os.remove(file_path)
+                    deleted=deleted+1
+                    print(f"🗑️ 삭제됨: {file_path}")
             except Exception as e:
-                    print(f"Error: {file_path} - > {e}")
-    print("정리 완료!\n")
+                print(f"오류: {e}")
 
-if __name__ == "__main__":
-    organize_files()
+    print(f"총 {deleted}개 파일 삭제됨")
+
+def clear_chrome_history():
+    history_path = os.path.join(CHROME_USER_DATA, "History")
+
+    try:
+        if os.path.exists(history_path):
+            os.remove(history_path)
+            print("크롬 방문기록 삭제완료")
+    except Exception as e:
+        print(f" 크롬 방문기록 삭제 실패{e}")
+
+def clear_chrome_cache():
+    cache_path = os.path.join(CHROME_USER_DATA, "Cache")
+    print(f"🧪 캐시 경로: {cache_path}")  # 이거 추가!
+
+    try:
+        if os.path.exists(cache_path):
+            shutil.rmtree(cache_path)
+            print("크롬 캐시 삭제 완료")
+        else:
+            print("❌ Cache 폴더 없음")
+    except Exception as e:
+        print(f"크롬 캐시 삭제 실패: {e}")
+
+if __name__=="__main__":
+    print("정리시작")
+
+    delete_old_files(DOWNLOADS_PATH)
+    clear_chrome_history()
+    clear_chrome_cache()
+
+    print('모든 작업 완료')
