@@ -40,4 +40,4 @@ def main():
           
           
 if __name__ == "__main__":
-    main()
+    main() #import 편하게 하라고 쓴거 굳이 할필요없음
