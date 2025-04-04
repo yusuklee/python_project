@@ -4,12 +4,13 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 import os
+from email.mime.application import MIMEApplication
 
 sender_email = 'l56267969@gmail.com'
 app_password = 'kzyewhunzuvvmqyt'
 receiver_email = 'yusuk199@naver.com'
 
-file_path = 'Intermediate/next_project/2023082524_이유석.pdf'
+file_path = 'Intermediate/auto_mail/2023082524_이유석.pdf'
 
 subject = '구글 메일 전송 테스트'
 html_body = """
@@ -24,15 +25,16 @@ msg['Subject']= subject
 msg.attach(MIMEText(html_body,'html'))
 
 if os.path.exists(file_path):
-    with open(file_path,"rb")as attachment:
+    with open(file_path, "rb") as attachment:
         part = MIMEBase("application", "octet-stream")
         part.set_payload(attachment.read())
         encoders.encode_base64(part)
 
         part.add_header(
-            'Content-Disposition',
-            f'attachment; filename={os.path.basename(file_path)}',
+            "Content-Disposition",
+            f"attachment; filename={os.path.basename(file_path)}",
         )
+
         msg.attach(part)
 else:
     print(f'파일이 존재하지 않음:{file_path}')
