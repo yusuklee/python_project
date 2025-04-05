@@ -13,14 +13,14 @@ app.secret_key = 'your_secret_key'
 
 db.init_app(app)
 
-with app.app_context():
-    db.create_all()
+with app.app_context(): 
+    db.create_all() #플라스크앱에 데이터베이스 테이블 만들려면 이리함
 
 @app.route('/')
 def index():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    
+    #query는 데이터베이스 검색할때 시작점
     todos = Todo.query.filter_by(user_id=session['user_id']).order_by(Todo.created_at.desc()).all()
     return render_template('index.html', todos=todos)
 
@@ -51,28 +51,28 @@ def delete(todo_id):
     db.session.commit()
     return redirect(url_for('index'))
 
-@app.route('/login', methods = ['GET', 'POST'])
+@app.route('/login', methods = ['GET', 'POST']) #/login으로 접속하거나 폼을 제출할때 실행되는 함수
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username = form.username.data).first()
-        if user and check_password_hash(user.password, form.password.data):
-            session['user_id']= user.id
-            return redirect(url_for('index'))
-        flash('Invalid credentials')
-    return render_template('login.html', form = form)
+    if form.validate_on_submit(): #폼이 조건을 통과하고 제출됬을때
+        user = User.query.filter_by(username = form.username.data).first() #User 테이블에서 폼에 알맞은 유저를 가져옴
+        if user and check_password_hash(user.password, form.password.data): #해시된 비번과 사용자가 입력한 비밀번호가 같은지 확인
+            session['user_id']= user.id #같으면 세션의 userid에 유저의 아이디 저장
+            return redirect(url_for('index')) #todo list로 이동
+    else: flash('Invalid credentials') #조건을 통과하지 못했을때
+    return render_template('login.html', form = form) #조건 통과못하고 다시 로그인창으로 이동
     
 
 @app.route('/register',methods = ['GET','POST'])
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        hashed_pw = generate_password_hash(form.password.data)
+        hashed_pw = generate_password_hash(form.password.data)#사용자가 준 비번을 해시로 바꾸는것
         user =User(username = form.username.data,password=hashed_pw)
-        db.session.add(user)
-        db.session.commit()
+        db.session.add(user) #데이터베이스 연결세션임 flask세션과는 다름
+        db.session.commit()#데이터베이스에 연결한후에 추가한후에 저장
         return redirect(url_for('login'))
-    return render_template('register.html',form=form)
+    return render_template('register.html',form=form)#회원정보를 제데로 입력안했을때 제자리
 
 @app.route('/logout')
 def logout():

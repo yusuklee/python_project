@@ -1,10 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-db = SQLAlchemy()
+db = SQLAlchemy() #주로 클래스를 데이터베이스와 연결하는 객체
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
+class User(db.Model): #Model 클래스를 상속받으면 데이터베이스 테이블과 매핑됨
+    id = db.Column(db.Integer, primary_key = True) 
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
 
