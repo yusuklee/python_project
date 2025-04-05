@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+    <title>환율 변환기</title>
+</head>
+<body>
+    <h1>💱 실시간 환율 변환기</h1>
+    <form method="POST">
+        기준 통화 (예: USD): <input name="base" required><br>
+        금액: <input name="amount" required><br>
+        변환할 통화들 (예: KRW,JPY,EUR): <input name="targets" required><br>
+        <button type="submit">변환</button>
+    </form>
+
+    {% if result %}
+        <h2>📊 변환 결과</h2>
+        <ul>
+            {% for currency, value in result.items() %}
+                <li>{{ currency }}: {{ value }}</li>
+            {% endfor %}
+        </ul>
+        <img src="{{ url_for('static', filename='chart.png') }}" alt="환율 차트">
+    {% endif %}
+</body>
+</html>
