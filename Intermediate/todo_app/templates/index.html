@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Your TODO List</h2>
+<form method="POST" action="{{ url_for('add') }}">
+    <div class="input-group mb-3">
+        <input type="text" name="content" class="form-control" placeholder="Enter a task">
+        <button class="btn btn-primary" type="submit">Add</button>
+    </div>
+</form>
+
+<ul class="list-group">
+    {% for todo in todos %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+            <a href="{{ url_for('toggle', todo_id=todo.id) }}"
+               style="text-decoration: none; {% if todo.completed %}text-decoration: line-through;{% endif %}">
+               {{ todo.content }}
+            </a>
+        </div>
+        <a href="{{ url_for('delete', todo_id=todo.id) }}" class="btn btn-danger btn-sm">Delete</a>
+    </li>
+    {% endfor %}
+</ul>
+<br>
+<a href="{{ url_for('logout') }}">Logout</a>
+{% endblock %}

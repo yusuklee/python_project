@@ -1,0 +1,17 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2 {
+    font-weight: 600;
+    color: #333;
+}
+
+input.form-control {
+    border-radius: 8px;
+}
+
+button.btn {
+    border-radius: 8px;
+}
