@@ -1,16 +1,14 @@
 import requests
 
-def get_exchange_rate(base:str, target:str) ->float:
-    """
-    base 통화에서 target 통화로의 환율을 가져오는 함수
-    """
+def get_exchange_rate(base:str, target:str):
+   
     try:
-        url = f"https://open.er-api.com/v6/latest/{base.upper()}"
+        url = f"https://open.er-api.com/v6/latest/{base.upper()}" #base에따라서 애초에 환율이 다르게나옴
         response = requests.get(url)
         response.raise_for_status() #요청 실패시 예외 발생
         data = response.json()
         
-        return data['rates'][target.upper()]
+        return data['rates'][target.upper()] #환율리턴
     except requests.exceptions.RequestException as e:
         print(f'[오류] API 요청 실패:{e}')
         return None
@@ -18,7 +16,7 @@ def get_exchange_rate(base:str, target:str) ->float:
         print(f'[오류] 잘못된 통화 코드: {base}->{target}')
         return None
     
-def convert_currency(amount:float, rate:float) ->float:
+def convert_currency(amount:float, rate:float):
     return round(amount *rate, 2)
 
 def main():
