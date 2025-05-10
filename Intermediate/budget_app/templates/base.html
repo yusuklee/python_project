@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head>
+    <title>가계부</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        table, th, td { border: 1px solid #ccc; border-collapse: collapse; padding: 8px; }
+    </style>
+</head>
+<body>
+    <h1>개인 가계부</h1>
+    <nav>
+        <a href="/">홈</a> |
+        <a href="/add">항목 추가</a>
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>

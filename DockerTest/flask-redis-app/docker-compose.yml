@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  web:
+    build:
+      context: .         # 🔹 빌드 컨텍스트는 프로젝트 루트 전체
+      dockerfile: app/Dockerfile  # 🔹 정확한 위치의 Dockerfile 지정
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+
+      
+      

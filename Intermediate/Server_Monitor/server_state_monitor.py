@@ -23,19 +23,19 @@ def send_slack_alert(message):
         logging.error(f"slack 전송 실패: {e}")
 
 
-def log_and_alert(label, percent, threshold):
+def log_and_alert(label, percent, threshold):#라벨부분에 cpu 메모리 디스크 이런게들갈듯
     msg = f"[ALERT] {label} 사용률 {percent}%가 임계치 {threshold}% 초과!"
     print(msg)
-    logging.warning(msg)
-    send_slack_alert(msg)
+    logging.warning(msg) #로그에 기록
+    send_slack_alert(msg) #슬랙으로 보내는거
 
 
 def monitor(interval=5):
     try:
         while True:
-            cpu = psutil.cpu_percent(interval=1)
-            memory=psutil.virtual_memory()
-            disk = psutil.disk_usage("/")
+            cpu = psutil.cpu_percent(interval=1) #1초동안 cpu 사용률의 평균을 측정
+            memory=psutil.virtual_memory() #메모리사용률
+            disk = psutil.disk_usage("/")#루트 디렉터리의 디스크 사용률
 
             logging.info(f"cpu usage:{cpu}%")
             logging.info(f"Memory Usage:{memory.percent}%")
@@ -55,5 +55,5 @@ def monitor(interval=5):
 
 
 if __name__ == "__main__":
-    send_slack_alert("✅ Slack 메시지 전송 테스트입니다.")  # ← 테스트 메시지 전송
+    send_slack_alert("✅ Slack 메시지 전송 테스트입니다.")  
     monitor(interval=5)

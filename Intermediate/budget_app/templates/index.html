@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>지출/수입 내역</h2>
+<p><strong>총 수입:</strong> {{ income }}원</p>
+<p><strong>총 지출:</strong> {{ expense }}원</p>
+<table>
+    <tr>
+        <th>날짜</th><th>종류</th><th>카테고리</th><th>금액</th>
+    </tr>
+    {% for row in records %}
+    <tr>
+        <td>{{ row[1] }}</td>
+        <td>{{ '수입' if row[2] == 'income' else '지출' }}</td>
+        <td>{{ row[3] }}</td>
+        <td>{{ row[4] }}원</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
