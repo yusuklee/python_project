@@ -1,0 +1,10 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+COPY Requirements.txt .
+RUN pip install -r Requirements.txt 
+#run은 이미지 빌드할떄 실행됨
+COPY App/App.py .
+CMD [ "python", "App.py" ]
+#cmd는 컨테이너 실행할떄 실행됨
